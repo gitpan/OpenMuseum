@@ -14,11 +14,11 @@ system.
 
 =head1 VERSION
 
-Version 0.80
+Version 0.90
 
 =cut
 
-our $VERSION = '0.80';
+our $VERSION = '0.90';
 
 
 =head1 SYNOPSIS
@@ -42,6 +42,7 @@ This method takes arguments as a hash consttructor.
 
 EG:
     $om = OpenMuseum->new('config' => "config.yml");
+
 One of the options must be config, and it must point to a file
 
 =cut
@@ -58,6 +59,11 @@ sub new{
 
 =head2 initialize
 
+Shh, nothing to see here...
+
+This is an internal method used to parse the config file, and
+create the database handle used to query the system.
+
 =cut
 
 sub initialize{
@@ -69,6 +75,8 @@ sub initialize{
 
 =head2 gendb
 
+Another private method used to construct a DBN for the DBI system.
+
 =cut
 
 sub gendb{
@@ -77,6 +85,10 @@ sub gendb{
 }
 
 =head2 authfiles
+
+This method returns an array reference being a list of different
+entries in an authority file.  it tkesone argument, the name of
+an authority file.
 
 =cut
 
@@ -88,6 +100,9 @@ sub authfiles{
 }
 
 =head2 authen
+
+The authen function is used to authenticate a user, it takes two
+parameters: user and password.
 
 =cut
 
