@@ -14,23 +14,27 @@ system.
 
 =head1 VERSION
 
-Version 0.90
+Version 0.10
 
 =cut
 
-our $VERSION = '0.90';
+our $VERSION = '0.10';
 
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+This module is designed to interact with the databases used by
+OpenMuseum.  The intent is to provide an object-oriented interface
+to the database, abstracting away the SQL heavy lifting.
 
-Perhaps a little code snippet.
+Use:
 
     use OpenMuseum;
-
-    my $foo = OpenMuseum->new();
-    ...
+    $om = OpenMuseum->new('config' => 'config.yaml');
+    $stat = $om->authen("username", "passwordhashhere");       #not necessarily a required step
+    $rep = $om->report("SELECT id, name, address, email_address, expiry FROM members WHERE expiry LESSTHAN '2022/15/14'" "id");
+    # dostuff with the results of the report
+    
 
 =head1 METHODS
 
@@ -38,7 +42,7 @@ Perhaps a little code snippet.
 
 The new routine returns an initialized OpenMuseum object.
 
-This method takes arguments as a hash consttructor.
+This method takes arguments as a hash constructor.
 
 EG:
     $om = OpenMuseum->new('config' => "config.yml");
@@ -121,6 +125,10 @@ sub authen{
 
 =head2 options
 
+The options function will get and set options.  It takes two options,
+the key and the value, the value is optional and will continue to be
+the previous value.  This returns current value of the option $key.
+
 =cut
 
 sub options{
@@ -132,6 +140,11 @@ sub options{
 }
 
 =head2 report
+
+This function performs database reports, and is very handy.  It takes two
+arguments, an SQL query and a reference column.  THat is the name of a column
+to use as the lookup.  It will either return a hashreference to the results of
+the query, or an error if the query was not a 'SELECT' query.
 
 =cut
 
@@ -147,6 +160,29 @@ sub report{
 }
 
 =head2 accessions
+
+This routine takes at least one argument, a command.  Possible commands are
+query, ids, retrieve, modify, and create.
+
+=head3 query
+
+
+
+=head3 retrieve
+
+
+
+=head3 ids
+
+
+
+=head3 modify
+
+
+
+=head3 create
+
+
 
 =cut
 
