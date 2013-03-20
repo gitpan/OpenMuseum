@@ -14,11 +14,11 @@ system.
 
 =head1 VERSION
 
-Version 0.10
+Version 0.11
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 
 =head1 SYNOPSIS
@@ -52,9 +52,9 @@ One of the options must be config, and it must point to a file
 =cut
 
 sub new{
-    $class = shift;
-    %options = @_;
-    $self = {};
+    my $class = shift;
+    my %options = @_;
+    my $self = {};
     bless $self, $class;
     $self->{options} = %options;
     $self->initialize();
@@ -71,7 +71,7 @@ create the database handle used to query the system.
 =cut
 
 sub initialize{
-    $self = shift;
+    my $self = shift;
     $self->{config} = LoadFile($self->{options}->{config});
     $self->{dbn} = $self->gendbn();
     $self->{dbh} = DBI->connect($self->{dbn}, $self->{config}->{userName}, $self->{config}->{password});
@@ -84,7 +84,7 @@ Another private method used to construct a DBN for the DBI system.
 =cut
 
 sub gendb{
-    $self = shift;
+    my $self = shift;
     return "DBI:mysql:".$self->{config}->{db}.";host=".$self->{config}->{host};
 }
 
@@ -97,9 +97,9 @@ an authority file.
 =cut
 
 sub authfiles{
-    $self = shift;
-    $file = lc(shift);
-    $statement = "SELECT item FROM authfiles WHERE filename == '$file'";
+    my $self = shift;
+    my $file = lc(shift);
+    $statement = "SELECT id, item, other FROM authfiles WHERE filename == '$file'";
     return $self->{dbh}->selectall_arrayref($statement);
 }
 
@@ -111,11 +111,11 @@ parameters: user and password.
 =cut
 
 sub authen{
-    $self = shift;
-    $user = shift;
-    $pass = shift;
-    $query = "SELECT id FROM users WHERE name == $user AND pass == $pass";
-    $res = $self->{dbh}->selectrow_hashref($query, "id");
+    my $self = shift;
+    my $user = shift;
+    my $pass = shift;
+    my $query = "SELECT id FROM users WHERE name == $user AND pass == $pass";
+    my $res = $self->{dbh}->selectrow_hashref($query, "id");
     if (defined($res)) {
         return $res->{id};
     } else {
@@ -132,9 +132,9 @@ the previous value.  This returns current value of the option $key.
 =cut
 
 sub options{
-    $self = shift;
-    $name = shift;
-    $val = shift;
+    my $self = shift;
+    my $name = shift;
+    my $val = shift;
     $self->{options}->{$name} = defined($val) ? $val : $self->{options}->{$name};
     return $self->{options}->{$name};
 }
@@ -149,9 +149,9 @@ the query, or an error if the query was not a 'SELECT' query.
 =cut
 
 sub report{
-    $self = shift;
-    $report = shift;
-    $reffield = shift;
+    my $self = shift;
+    my $report = shift;
+    my $reffield = shift;
     if ($report =~ /^select.*/i) {
         return $self->{dbh}->selectall_hashref($report, $reffield);
     }else {
@@ -187,8 +187,8 @@ query, ids, retrieve, modify, and create.
 =cut
 
 sub accessions{
-    $self = shift;
-    $type = shift;
+    my $self = shift;
+    my $type = shift;
     if ($type eq "query") {
     } elsif ($type eq "ids") {
     } elsif ($type eq "retrieve") {
@@ -204,8 +204,8 @@ sub accessions{
 =cut
 
 sub multimedia{
-    $self = shift;
-    $type = shift;
+    my $self = shift;
+    my $type = shift;
     if ($type eq "query") {
     } elsif ($type eq "ids") {
     } elsif ($type eq "retrieve") {
@@ -222,8 +222,8 @@ sub multimedia{
 =cut
 
 sub contacts{
-    $self = shift;
-    $type = shift;
+    my $self = shift;
+    my $type = shift;
     if ($type eq "query") {
     } elsif ($type eq "ids") {
     } elsif ($type eq "retrieve") {
@@ -240,7 +240,7 @@ sub contacts{
 =cut
 
 sub memberships{
-    $self = shift;
+    my $self = shift;
     
 }
 
@@ -249,8 +249,8 @@ sub memberships{
 =cut
 
 sub archive{
-    $self = shift;
-    $type = shift;
+    my $self = shift;
+    my $type = shift;
     if ($type eq "query") {
     } elsif ($type eq "ids") {
     } elsif ($type eq "retrieve") {
@@ -267,8 +267,8 @@ sub archive{
 =cut
 
 sub exhibits{
-    $self = shift;
-    $type = shift;
+    my $self = shift;
+    my $type = shift;
     if ($type eq "list") {
     } elsif ($type eq "create") {
     } elsif ($type eq "suspend") {
@@ -284,8 +284,8 @@ sub exhibits{
 =cut
 
 sub control{
-    $self = shift;
-    $type = shift;
+    my $self = shift;
+    my $type = shift;
 }
 
 =head1 AUTHOR
