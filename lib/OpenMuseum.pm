@@ -14,11 +14,11 @@ system.
 
 =head1 VERSION
 
-Version 0.11
+Version 0.12
 
 =cut
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 
 =head1 SYNOPSIS
@@ -30,7 +30,7 @@ to the database, abstracting away the SQL heavy lifting.
 Use:
 
     use OpenMuseum;
-    $om = OpenMuseum->new('config' => 'config.yaml');
+    $om = OpenMuseum->new(-host => 'localhost', -db => 'openmuseum', -username => 'museum', -password => 'password');
     $stat = $om->authen("username", "passwordhashhere");       #not necessarily a required step
     $rep = $om->report("SELECT id, name, address, email_address, expiry FROM members WHERE expiry LESSTHAN '2022/15/14'" "id");
     # dostuff with the results of the report
@@ -45,9 +45,18 @@ The new routine returns an initialized OpenMuseum object.
 This method takes arguments as a hash constructor.
 
 EG:
-    $om = OpenMuseum->new('config' => "config.yml");
+    $om = OpenMuseum->new(options here);
 
-One of the options must be config, and it must point to a file
+These arguments will default, as shown here
+
+-username
+    museummate
+-password
+    ImAVeryBadPassword
+-host
+    localhost
+-db
+    openmusem
 
 =cut
 
@@ -56,6 +65,10 @@ sub new{
     my %options = @_;
     my $self = {};
     bless $self, $class;
+    $options{-username} ||= 'museummate';
+    $options{-password} ||= 'ImAVeryBadPassword';
+    $options{-host} ||= 'localhost';
+    $options{-db} ||= 'openmuseum';
     $self->{options} = %options;
     $self->initialize();
     return $self;
@@ -72,9 +85,8 @@ create the database handle used to query the system.
 
 sub initialize{
     my $self = shift;
-    $self->{config} = LoadFile($self->{options}->{config});
     $self->{dbn} = $self->gendbn();
-    $self->{dbh} = DBI->connect($self->{dbn}, $self->{config}->{userName}, $self->{config}->{password});
+    $self->{dbh} = DBI->connect($self->{dbn}, $self->{options}->{-username}, $self->{options}->{-password});
 }
 
 =head2 gendb
@@ -85,7 +97,7 @@ Another private method used to construct a DBN for the DBI system.
 
 sub gendb{
     my $self = shift;
-    return "DBI:mysql:".$self->{config}->{db}.";host=".$self->{config}->{host};
+    return "DBI:mysql:".$self->{options}->{-db}.";host=".$self->{options}->{-host};
 }
 
 =head2 authfiles
@@ -235,15 +247,6 @@ sub contacts{
 
 }
 
-=head2 memberships
-
-=cut
-
-sub memberships{
-    my $self = shift;
-    
-}
-
 =head2 archive
 
 =cut
@@ -277,6 +280,58 @@ sub exhibits{
     } else {
         
     }
+}
+
+=head2 objects
+
+=cut
+
+sub objects {
+
+}
+
+=head2 campaigns
+
+=cut
+
+sub campaigns{
+
+}
+
+=head2 tcustody
+
+=cut
+
+sub tcustody{
+#temp custody
+}
+
+=head2 inloan
+
+=cut
+
+sub inloan{
+
+}
+
+=head2 outloan
+
+=cut
+
+sub outloan{
+
+}
+
+sub deaccession{
+
+}
+
+sub bios{
+
+}
+
+sub sites{
+
 }
 
 =head2 control

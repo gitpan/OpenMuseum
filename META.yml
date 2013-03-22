@@ -21,4 +21,4 @@ requires:
   DBD::mysql: 4.022
   DBI: 1
   perl: 5.006
-version: 0.11
+version: 0.12
